@@ -1,3 +1,30 @@
+fn normal_match(num: &str) -> i32 {
+    match num {
+        "M" => 1000,
+        "D" => 500,
+        "C" => 100,
+        "L" => 50,
+        "X" => 10,
+        "V" => 5,
+        "I" => 1,
+        _ => 0
+    }
+}
+
+pub fn roman_to_arabic(numeral: String) -> i32 {
+    numeral.split("").collect::<Vec<&str>>().chunks(2).map(|window| {
+        match (window[0], window[1]) {
+            ("C", "M") => 900,
+            ("C", "D") => 400,
+            ("X", "C") => 90,
+            ("X", "L") => 40,
+            ("I", "X") => 9,
+            ("I", "V") => 4,
+            (a, b) => normal_match(a) + normal_match(b)
+        }
+    }).sum::<i32>()
+}
+
 pub fn arabic_to_roman(mut number: i32) -> String {
     let mut res = String::from("");
 
@@ -73,6 +100,11 @@ pub fn arabic_to_roman(mut number: i32) -> String {
 mod tests {
     // use super::*; // This is weird. After ading this, linter complains about unused imports.
     // But without it, it does not compile, unless I namespace arabic_to_roman with `crate::`.
+
+    #[test]
+    fn test_roman_to_arabic() {
+        assert_eq!(crate::numerals::roman_to_arabic("MMMCDLVI".into()), 3456);
+    }
 
     #[test]
     fn test_3999() {
